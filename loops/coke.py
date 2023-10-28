@@ -8,12 +8,22 @@ Once the user has inputted at least 50 cents,
 the program outputs how many cents in change the user is owed.
 """
 
-print("Amount Due: 50")
-consumer_input = int(input("Insert Coin: "))
 
-amount_due = 50
+consumer_input= 0
 
-while consumer_input != amount_due:
-    x = amount_due - consumer_input
-    print("Amount Due: "+ x)
-    n = int(input("Insert Coin: "))
+cost= 50
+
+def main():
+    amount_due(consumer_input, cost)
+
+def amount_due(x, y):
+    
+    while x < y:
+        print("Amount Due: ",y-x)
+        x += int(input("Insert Coin: "))
+    else: 
+        change_owed = x - y
+        print("Change Owed: ", change_owed)
+
+
+main()
