@@ -8,21 +8,19 @@ Each meal’s time range is inclusive.
 
 def main():
     # Prompt the user to enter a time
-    time_str = input("What is it? ")
-    # Convert the input into float hours
-    t_eat = convert(time_str)
+    time = convert(input("What is it? "))   
     # check if it's time to eat and what to eat
-    if 7 <= t_eat <= 8:
+    if 7 <= time <= 8:
         print("breakfast time")
-    elif 12 <= t_eat <= 13:
+    elif 12 <= time <= 13:
         print("lunch time")
-    elif 18 <= t_eat <= 19:
-        print("dsinner time")
+    elif 18 <= time <= 19:
+        print("dinner time")
 
 # Function to convert 24 h time to the corresponding number of hours as a float
-def convert(to):
+def convert(time):
     # Split hours and minutes from string
-    time_object = to.split(":")
+    time_object = time.split(":")
     # Convert numbers to integers
     h, m = int(time_object[0]), int(time_object[1])
     # Calculate minutes in decimal values
