@@ -1,5 +1,6 @@
 
 from string import punctuation
+import re
 # Minimum length of plate
 l_min = 2
 # Max length of plate
@@ -48,12 +49,13 @@ def is_valid(input_str: str) ->bool:
     # Check if string contains punctuation marks
     has_punctuation(input_str)
 ]
-    # Check if each condition is True
-    for condition in conditions:
-        if not condition:
-            return False
-        else: 
-            return True
+    # Check if all conditions are met
+    all_conditions_met = all(conditions)
+
+    if all_conditions_met: 
+        return True
+    else: 
+        return False
 
 def has_length(x_str, m, x):
     """
@@ -67,7 +69,10 @@ def has_length(x_str, m, x):
     Returns:
     True is length of vanity plate is between 2 and 6, False if othwerwise.  
     """
-    m <= len(x_str) <= x
+    if m <= len(x_str) <= x:
+        return True
+    else: 
+        return False
 
 
 def has_punctuation(s: str) -> bool:
@@ -85,21 +90,29 @@ def has_punctuation(s: str) -> bool:
 
 def middle_numbers(y):
     """
-   Returns True if 
+   Checks if string contains numbers in the middle. 
+   Expects: strin of plates
+   Modifies: nothing
+   Returns: True is string contains numbers at the end of the string
+   False if numbers are in the middle of the string. 
     """
+    # Initialize variable to store index where first number is encountered. 
     number_index = None
+    contains_number = ''
     for i in range(len(y)):
-        # check if a string contains digit and extract the index of the first number found
+        # check if a string contains digits and store its index in variable
         if y[i].isdigit():
-            # store that index in variable
             number_index= i
+            contains_number = y[number_index:]
             break
         # divide the string at index
-    contains_number = y[number_index:]
-    # Take the second part of string and check if it contains all nnumbers
+    
+    # Check if it contains all nnumbers
     if all(char.isdigit() for char in contains_number):
         return True
     else: 
         return False
+
+   
 
 main() 
