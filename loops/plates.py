@@ -99,19 +99,35 @@ def middle_numbers(y):
     # Initialize variable to store index where first number is encountered. 
     number_index = None
     contains_number = ''
+    valid = True
     for i in range(len(y)):
         # check if a string contains digits and store its index in variable
-        if y[i].isdigit():
+        if y[i].isdigit() and y[i] == '0':
+            valid = not valid
+            break
+
+        elif y[i].isdigit() and y[i] != '0':
             number_index= i
             contains_number = y[number_index:]
+            if all(char.isdigit() for char in contains_number):
+                valid
+            else: 
+                valid = not valid
             break
-        # divide the string at index
+    return valid
+    # for i in range(len(y)):
+    #     # if y[i].isdigit() and y[i] == '0':
+    #     #     break
+            
+    #     elif y[i].isdigit() :
+    #         number_index = i
+    #         contains_number = y[number_index:]
+    #         break
+        
+     
     
     # Check if it contains all nnumbers
-    if all(char.isdigit() for char in contains_number):
-        return True
-    else: 
-        return False
+  
 
    
 
