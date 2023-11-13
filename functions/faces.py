@@ -4,10 +4,14 @@ def main():
     print(emoji_str)
 
 def convert(s):
-    if ":)" in s:
-        return "🙂"
-    elif ":(" in s:
-        return "🙁"
+    h = "Hello 🙂"
+    g = "Goodbye 🙁"
+    if "Hello :)" == s:
+        return h
+    elif "Goodbye :(" == s:
+        return g
+    elif (":)" and ":(") in s: 
+        return h + " " + g
     else: 
         return s
     
