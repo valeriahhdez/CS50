@@ -1,3 +1,4 @@
+# Dictionary of menu items
 menu_dict = {
     "Baja Taco": 4.25,
     "Burrito": 7.50,
