@@ -9,6 +9,7 @@ Finally, it prints the contents of dictionary"""
 
 grocery_list = []
 grocery_dict = {}
+
 while True:
     try: 
         grocery_item = input("")
@@ -18,10 +19,11 @@ while True:
         
         for item in range(len(grocery_list)):
             grocery_dict[grocery_list[item]] = grocery_list.count(grocery_list[item])
-
-
-        for key, value in grocery_dict.items():
+       
+        sorted_dict = dict(sorted(grocery_dict.items()))
+            
+        for key, value in sorted_dict.items():
             print(value, key.upper())
-        
+        # print(grocery_dict)'
         exit()
         ... 
