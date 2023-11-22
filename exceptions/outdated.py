@@ -1,5 +1,6 @@
 
-month_numbers = list(range(1,13))
+month_numbers = str(list(range(1,13)))
+
 month_names = [
     "January",
     "February",
@@ -15,45 +16,66 @@ month_names = [
     "December"
 ]
 
-days_month = list(range(1,31))
+days_list= str(list(range(1,32)))
 
 
 def valid_month(x, y,z): 
     """ 
-    Checks if the month given is month_names or in month_numbers
-    Args: month_names, month_numbers, month_item
-    Changes: nothing
-    Returns: True if month_item is valid 
+    Checks if the month given is in month_names or in month_numbers
+    Args: 
+    x: month_item
+    y: month_names
+    z: month_numbers
+    Changes: month_item
+    Returns: 
+    If month_item is valid, it return the month in a double digit number
+    If month_item is not in either month_names nor month_numbers, returns False
     """
-    # check if month_item is month_names list
+    # check if month_item is in month_names list
     if x in y:
-        return True
-    # check if month_item is month_numbers list
+        # Extract the index number
+        month_number = str(y.index(x)+1)
+        # turn into double digit number
+        return double_digit(month_number)
+        
+    # if month_item is in month_numbers list, return the month number as double digit
     elif x in z:
-        return True
+        return double_digit(x)
     else: 
         return False
     
-    
-def valid_day(x, y): 
-    if x in y:
-        return True
+
+def valid_day(d, y): 
+    """ 
+    Checks if the day given is in days_month
+    Args: 
+    d: day_item
+    y: days_month
+    Changes: day_item
+    Returns: If day_item is a valid day, then it returns the day as a double digit number
+    If day_item is not in days_month list, it returns False
+    """
+    if d in y:
+        return double_digit(d)
     else: 
         return False
 
-def valid_date(m,n):
-    if valid_day() and valid_month:
-        return True
-    else: 
-        return False
-
-def double_digit_month(v):
+def double_digit(v):
+    """
+    Args:
+    v the digit to be converted to a double sigit number
+    Changes: v
+    Returns:
+    v as a double digit number. If v is already a double digit, it returns the number itself
+    """
     if v.isdigit():
         return (str(v).zfill(2))
     else: 
-        return v   
+        return v 
+    
 
-while true:
+
+while True:
     try:
         # Prompt the user to enter a date
         input_date = input("Date: ")
@@ -63,8 +85,22 @@ while true:
         month_item = date_list[0]
         day_item = date_list[1]
         year_item = date_list[2]
-        if valid_date:
-            # add a zero at the begining of month (if number) and day if any or both are single digits. 
+        month_digit = valid_month(month_item, month_names, month_numbers)
+        day_digit = valid_day(day_item, days_list)
+        
+        if (day_digit or month_digit) == False:
+            continue
+        else:
+            print(year_item + "-" + month_digit + "-" + day_digit)
+            exit()
+            ...
+
+    except EOFError:
+        exit()
+        ... 
+
+
+            
 
 
 # Check if the input is valid,
