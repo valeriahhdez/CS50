@@ -1,4 +1,4 @@
-
+import re 
 month_numbers = str(list(range(1,13)))
 
 month_names = [
@@ -18,6 +18,7 @@ month_names = [
 
 days_list= str(list(range(1,32)))
 
+split_pattern = ('/|, | ')
 
 def valid_month(x, y,z): 
     """ 
@@ -80,7 +81,9 @@ while True:
         # Prompt the user to enter a date
         input_date = input("Date: ")
         # Separate values by '/'
-        date_list = input_date.split('/')
+        pre_date = input_date.strip()
+        date_list = re.split(split_pattern, pre_date)
+        
 
         month_item = date_list[0]
         day_item = date_list[1]
@@ -88,8 +91,10 @@ while True:
         month_digit = valid_month(month_item, month_names, month_numbers)
         day_digit = valid_day(day_item, days_list)
         
-        if (day_digit or month_digit) == False:
-            continue
+        if day_digit == False:
+            pass
+        elif month_digit == False:
+            pass
         else:
             print(year_item + "-" + month_digit + "-" + day_digit)
             exit()
