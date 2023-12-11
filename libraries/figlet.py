@@ -6,31 +6,44 @@ figlet = Figlet()
 
 list_of_fonts = figlet.getFonts()
 
-# def text_to_font():
+def generate_random_number():
+    """
+    Generate a random number
+    Args: none
+    Changes: nothing
+    Returns: a random integer between 0 and 549
+    """
+    random_number = random.randint(0,549)
+    return random_number
+
+
+def text_to_font(l, n):
+    """
+    Prints the input string formatted as a font from the 
+    list_of_fonts
+    Args: a list (l) and an index (n)
+    Changes: input_str
+    Returns: input_str formatted with font"""
+    # prompt the user
+    input_str = input("Input: ")
+    # extract the name of the font
+    font = l[n]
+    # pass the number to the output str
+    output_str = figlet.setFont(font= font)
+    # print the formatted str
+    print(figlet.renderText(input_str))
     
 
 if len(sys.argv) == 3:
-    # Check if sys.argv[1] == '--font' or '-f' , otherwise exit program
     if sys.argv[1] in ("--font", "-f"):
         if sys.argv[2] in list_of_fonts:
-            font_name = sys.argv[2]
-            input_str = input("Input: ")
-            output_font = figlet.setFont(font= font_name)
-            print(figlet.renderText(input_str))
+            text_to_font(sys.argv, 2)
         else:
-            sys.exit("Invalid usage1")
+            sys.exit("Invalid usage")
     else: 
-        sys.exit("Invalid usage2")
+        sys.exit("Invalid usage")
 elif len(sys.argv) == 1:
-    # Code to generate text with random font
-    input_str = input("Input: ")
-    get_random_font = random.randint(0,549)
-    output_font = figlet.setFont(font= list_of_fonts[get_random_font])
-    print(figlet.renderText(input_str))
+    text_to_font(list_of_fonts, generate_random_number())
 
 else:
-    sys.exit("Invalid usage3")
-
-
-# f = Figlet(font='slant')
-# print(f.renderText('text to render'))
+    sys.exit("Invalid usage")
