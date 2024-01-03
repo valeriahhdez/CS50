@@ -1,20 +1,22 @@
 import sys
+import os
+from PIL import Image
 
-def main():
-    conditions = [
-        validate_input_length(sys.argv),
-        validate_input_extension(sys.argv),
-        validate_input_exists(sys.argv)
-    ]
-    if all(conditions):
-        ...
+# def main():
+#     conditions = [
+#         validate_input_length(sys.argv),
+#         validate_input_extension(sys.argv),
+#         input_file_exists(sys.argv)
+#     ]
+#     if all(conditions):
+#         print('True')
 
 
 
 # Validate input length
 def validate_input_length(list_of_args:list)->bool:
     """
-    Validates the length of input
+    Validates the length of user input
     Args:
         list_of_args:the list of command-line arguments entered by user
     Returns:
@@ -39,10 +41,8 @@ def validate_input_extension(list_of_args):
         True: if both files have the same extension
         sys.exit: if file extensions are not the same or input does not contain a valid file extension
     """
-    input_file, output_file = list_of_args[1], list_of_args[2]
-    input_extension = input_file.split('.')[-1].lower()
-    output_extension = output_file.split('.')[-1].lower()
-    valid_extensions = ['jpeg', 'jpg', 'png']
+    input_extension, output_extension = os.path.splitext(sys.argv[1])[1].lower(), os.path.splitext(sys.argv[2])[1].lower()
+    valid_extensions = ['.jpeg', '.jpg', '.png']
     if input_extension == output_extension and input_extension in valid_extensions:
         print('True')
     elif input_extension != output_extension and (input_extension or output_extension in valid_extensions):
@@ -51,13 +51,15 @@ def validate_input_extension(list_of_args):
         sys.exit("Invalid input")
 
 
-def validate_input_exists(list_of_args):
-    valid_inputs = ["before1.jpg", "before.jpg", "before3.jpg"]
+def input_file_exists(list_of_args):
+    valid_inputs = ["before1.jpg", "before2.jpg", "before3.jpg"]
     if list_of_args[1] in valid_inputs:
         return True
     else:
         sys.exit("Input does not exist")
 
+def overlay_image():
+    ...
 
 
   
@@ -75,5 +77,14 @@ def validate_input_exists(list_of_args):
 # Paste template into it
     
 # Save into outputimage
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+
+# Open the input image
+input_image = Image.open("shirt.png")
+# resize and crop the input image
+shirt_size = input_image.size
+resized_input_image = (sys.argv[1], shirt_size)
+print(shirt_size)
+#Overlay the shirt image onto the input image and save the output file
+
