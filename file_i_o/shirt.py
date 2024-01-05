@@ -1,16 +1,33 @@
 import sys
 import os
 from PIL import Image
+from PIL import ImageOps
 
-# def main():
-#     conditions = [
-#         validate_input_length(sys.argv),
-#         validate_input_extension(sys.argv),
-#         input_file_exists(sys.argv)
-#     ]
-#     if all(conditions):
-#         print('True')
-
+def main():
+    """
+    Calls validate_input_length and validate_input_extension
+    Opens shirt.jpg file and pastes it into a background image
+    Args: 
+     - None
+    Returns:
+     - A new image with shirt on
+    """
+    conditions = [
+        validate_input_length(sys.argv),
+        validate_input_extension(sys.argv)
+    ]
+    if all(conditions):
+        try:
+            # Open the input image
+            shirt = Image.open("shirt.png")
+            # resize and crop the input image
+            shirt_size = shirt.size
+            photo = Image.open(sys.argv[1])
+            output_file = ImageOps.fit(photo, shirt_size)
+            output_file.paste(shirt, shirt)
+            output_file.save(sys.argv[2])
+        except: 
+            sys.exit("Input does not exist")
 
 
 # Validate input length
@@ -44,47 +61,14 @@ def validate_input_extension(list_of_args):
     input_extension, output_extension = os.path.splitext(sys.argv[1])[1].lower(), os.path.splitext(sys.argv[2])[1].lower()
     valid_extensions = ['.jpeg', '.jpg', '.png']
     if input_extension == output_extension and input_extension in valid_extensions:
-        print('True')
+        return True
     elif input_extension != output_extension and (input_extension or output_extension in valid_extensions):
         sys.exit("Input and output have different extensions")
     elif not(input_extension and output_extension in valid_extensions):
         sys.exit("Invalid input")
 
 
-def input_file_exists(list_of_args):
-    valid_inputs = ["before1.jpg", "before2.jpg", "before3.jpg"]
-    if list_of_args[1] in valid_inputs:
-        return True
-    else:
-        sys.exit("Input does not exist")
+if __name__ == "__main__":
+    main()
 
-def overlay_image():
-    ...
-
-
-  
-    
-# User to enters an input and output files
-
-# Check if sys.argv has three arguments
-    
-# Check if input and output file have the same valid extension (.jpg, .jpeg, .png)
-    
-# Open input image
-        
-# Resize it
-
-# Paste template into it
-    
-# Save into outputimage
-# if __name__ == "__main__":
-#     main()
-
-# Open the input image
-input_image = Image.open("shirt.png")
-# resize and crop the input image
-shirt_size = input_image.size
-resized_input_image = (sys.argv[1], shirt_size)
-print(shirt_size)
-#Overlay the shirt image onto the input image and save the output file
 
