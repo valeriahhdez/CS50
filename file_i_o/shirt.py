@@ -5,60 +5,54 @@ from PIL import ImageOps
 
 def main():
     """
-    Calls validate_input_length and validate_input_extension
-    Opens shirt.jpg file and pastes it into a background image
+    Calls is_valid_length and is_valid_extension
+    Opens shirt.jpg file and pastes it into input_image
     Args: 
      - None
     Returns:
-     - A new image with shirt on
+     - A new image with shirt on stored in output_file
     """
-    conditions = [
-        validate_input_length(sys.argv),
-        validate_input_extension(sys.argv)
-    ]
-    if all(conditions):
+    if is_valid_length(sys.argv) and is_valid_extension(sys.argv):
         try:
             # Open the input image
             shirt = Image.open("shirt.png")
             # resize and crop the input image
             shirt_size = shirt.size
-            photo = Image.open(sys.argv[1])
-            output_file = ImageOps.fit(photo, shirt_size)
+            input_image = Image.open(sys.argv[1])
+            output_file = ImageOps.fit(input_image, shirt_size)
             output_file.paste(shirt, shirt)
             output_file.save(sys.argv[2])
         except: 
             sys.exit("Input does not exist")
 
-
-# Validate input length
-def validate_input_length(list_of_args:list)->bool:
+def is_valid_length(command_line_input:list)->bool:
     """
-    Validates the length of user input
+    Validates if command-line input contains input and output files
     Args:
-        list_of_args:the list of command-line arguments entered by user
+        command_line_input:the list of command-line arguments entered by user
     Returns:
-        True: if user entered two arguments
-        sys.exit: if the length of command-line args is less or greater than 3
+        True: if user entered all required arguments
+        sys.exit: if the length of command-line input is less or greater than 3
     """
-    if len(list_of_args) == 3:
+    if len(command_line_input) == 3:
         return True
-    elif len(list_of_args) < 3:
+    elif len(command_line_input) < 3:
         sys.exit("Too few command-line arguments")
-    elif len(list_of_args) > 3:
+    elif len(command_line_input) > 3:
         sys.exit("Too many command-line arguments")
 
-# validate_input_length(sys.argv)
-# Validate input type 
-def validate_input_extension(list_of_args):
+def is_valid_extension(command_line_input: list) -> bool:
     """
-    Validates that input and output files have the same extension
+    Validates if input and output files have the same extension
     Args:
-        list_of_args:the list of command-line arguments entered by user
+        command_line_input: the list of command-line arguments entered by user
     Returns:
         True: if both files have the same extension
-        sys.exit: if file extensions are not the same or input does not contain a valid file extension
+        sys.exit: if file extensions are not the same or input or output does not contain a valid file extension
     """
-    input_extension, output_extension = os.path.splitext(sys.argv[1])[1].lower(), os.path.splitext(sys.argv[2])[1].lower()
+    # Split the extention from input and output command-line strings 
+    # and store them into variables
+    input_extension, output_extension = os.path.splitext(command_line_input[1])[1].lower(), os.path.splitext(command_line_input[2])[1].lower()
     valid_extensions = ['.jpeg', '.jpg', '.png']
     if input_extension == output_extension and input_extension in valid_extensions:
         return True
