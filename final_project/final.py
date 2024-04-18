@@ -1,4 +1,6 @@
 from tabulate import tabulate
+import pandas as pd
+import sys
 # while True:
 #     options = input("What do you want to do with your recipe?\n (1) Get %\n (2) Get gr \n Enter number:")
 #     if "1" in options:
@@ -19,9 +21,9 @@ from tabulate import tabulate
 
 def main():
     # prompts the user to select type of calculation
-    type_of_recipe = input("(1) to calculate percentages\n (2) to calculate gr\n Enter option: ")
+    type_of_recipe = input("(1) to calculate percentages\n(2) to calculate gr\nEnter option: ")
     if type_of_recipe == "1":
-        print(percentage_recipe())
+        percentage_recipe()
     # elif "2" in type_of_recipe:
     #     ingredient = input("Enter ingredient and gr: ")
     #     calculate_grams(ingredient)
@@ -29,8 +31,8 @@ def main():
 def percentage_recipe():
     ingredients = {}
     while True:
-        # Prompt user to enter ingredients and weights one by one until he/she completes list
-        ingredient = input("Enter an ingredient (or 'q' to quit): ")
+        # Prompt user to enter ingredients and weights one by one until the recipe is complete
+        ingredient = input("Enter an ingredient (or 'q' to finish recipe): ")
         if ingredient.lower() == 'q':
             break
         weight = float(input(f"Enter the weight in grams of {ingredient}: "))
@@ -42,35 +44,44 @@ def percentage_recipe():
         return 
     # Calculate and store percentages inside a list
     recipe_data = {}
+    # headers=['Ingredient', 'Weight (g)', '% of flour weight']
     for ingredient, weight in ingredients.items():
         percentage = calculate_percentage(weight, flour_weight)
         recipe_data[ingredient] = {
             'Weight (g)': weight,
             '% of flour weight': f"{percentage:.2f} %"
         }
-        # Create table using the data from list
-        print(tabulate(recipe_data, headers=['Ingredient', 'Weight (g)', '% of flour weight']))
+        
+        # # Create table using the data from list
+        recipe_table = pd.DataFrame.from_dict(recipe_data, orient='index')
+    print(recipe_table)
         # Ask if user wants to make changes to the recipe
-        make_changes = input("Would you like to change anything?\n (1) Yes\n (2) No\n Enter number: ")
-        if make_changes == "1":
-            print("Updated recipe")
-            change_recipe()
+    make_changes = input("Would you like to change anything?\n(1) Yes\n(2) No\nEnter number: ")
+    if make_changes == "1":
+        print(change_recipe(ingredients, flour_weight))
+    elif make_changes == "2":
+        sys.exit()
+    
+def create_table(recipe_dict):
+    table = tabulate(recipe_dict)
+    return table
 
 def change_recipe(ingredient_list, flour_weight):
     while True:
-        ingredient_to_change = input("\nEnter the ingredient you want to change (or 'q' to quit): ")
-        if ingredient_to_change.lower() == 'q':
+        ingredient = input("\nEnter the ingredient you want to change or 'q' to finish recipe: ")
+        if ingredient.lower() == 'q':
             break
-        new_weight = float(input(f"Enter the new weight in grams for {ingredient_to_change}: "))
-        ingredient_list[ingredient_to_change] = new_weight
-        new_recipe_data = {}
+        weight = float(input(f"Enter the new weight in grams for {ingredient}: "))
+        ingredient_list[ingredient] = weight
+    new_recipe_data = {}
     for ingredient, weight in ingredient_list.items():
-        percentage = calculate_percentage(new_weight, flour_weight)
+        percentage = calculate_percentage(weight, flour_weight)
         new_recipe_data[ingredient] = {
             'Weight (g)': weight,
             '% of flour weight': f"{percentage:.2f} %"
         }
-    return tabulate(new_recipe_data.items(), headers=['Ingredient', 'Weight (g)', '% of flour weight'])
+        new_recipe_table = pd.DataFrame.from_dict(new_recipe_data, orient='index')
+    return new_recipe_table
 
 def calculate_percentage(x_weight, y_weight):
     return (x_weight/y_weight) *100
