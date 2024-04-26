@@ -1,30 +1,36 @@
-from tabulate import tabulate
 import pandas as pd
 import sys
 
 def main():
     # prompt the user to select type of calculation
-    type_of_recipe = input("What do you want to do with your ingredients?\n(1) Calculate percentages\n(2) Calculate gr\nEnter option: ")
-    if type_of_recipe == "1":
-        create_recipe_from_grams()
-    elif "2" in type_of_recipe:
-        create_recipe_from_percentage()
+    try: 
+        type_of_recipe = input("What do you want to do with your ingredients?\n(1) Calculate percentages\n(2) Calculate gr\nEnter option: ")
+        if type_of_recipe == "1":
+            create_recipe_from_grams()
+        elif "2" in type_of_recipe:
+            create_recipe_from_percentage()
+    except ValueError:
+        print("Invalid input. Please enter a valid numeric value.")
 
-def create_recipe_from_grams():
+
+def collect_ingredient_weights():
     ingredients = {}
     while True:
-        # Prompt the user to ingredients one at a time and their weights
-        ingredient = input("Enter the name of an ingredient or 'q' to finish recipe: ")
+        ingredient = input("Enter the name of an ingredient or 'q' to finish: ")
         if ingredient.lower() == 'q':
             break
-        weight = float(input(f"Enter the weight in grams for {ingredient}: "))
+        weight = get_user_input(f"Enter the weight in grams of {ingredient}: ")
         ingredients[ingredient] = weight
-    # Ensure flour has been entered and has a non-zero weight
-    flour_weight = ingredients.get('flour')
+    return ingredients
+def create_recipe_from_grams():
+    ingredients = collect_ingredient_weights()
+
+    # Ensure flour weight is provided
+    flour_weight = ingredients.get('flour', 0)
     if flour_weight == 0:
-        print("Flour weight is zero or not provided, cannot create recipe.")
-        return 
-    # Calculate and store percentages inside list
+        print("Flour weight is zero or not provided. Cannot create recipe.")
+        return
+
     recipe_data = {}
     for ingredient, weight in ingredients.items():
         percentage = calculate_percentage(weight, flour_weight)
@@ -32,20 +38,15 @@ def create_recipe_from_grams():
             'Weight (g)': weight,
             '% of flour weight': f"{percentage:.2f} %"
         }
-        
-        # Create table using the data from list
-        recipe_table = pd.DataFrame.from_dict(recipe_data, orient='index')
+
+    recipe_table = pd.DataFrame.from_dict(recipe_data, orient='index')
     print(recipe_table)
-    # Ask if user wants to make any changes
-    make_changes = input("Would you like to change anything?\n(1) Yes\n(2) No\nEnter number: ")
+
+    make_changes = input("Would you like to make any changes?\n(1) Yes\n(2) No\nEnter number: ")
     if make_changes == "1":
         print(change_recipe(ingredients, flour_weight))
     elif make_changes == "2":
         sys.exit()
-    
-def create_table(recipe_dict):
-    table = tabulate(recipe_dict)
-    return table
 
 def change_recipe(ingredient_list, flour_weight):
     while True:
@@ -64,9 +65,6 @@ def change_recipe(ingredient_list, flour_weight):
         }
         new_recipe_table = pd.DataFrame.from_dict(new_recipe_data, orient='index')
     return new_recipe_table
-
-def calculate_percentage(x_weight, y_weight):
-    return (x_weight/y_weight) *100
 
 def create_recipe_from_percentage():
     ingredient_dict = {
@@ -88,9 +86,58 @@ def create_recipe_from_percentage():
     print("Updated ingredient_dict:")
     return ingredient_dict
    
-# # ----- Functions to calculate grams of ingredients ------
-# def calculate_grams_of_water():
-#     ...
+# # ----- Formula functions ------
+def calculate_percentage(x_weight, y_weight):
+    return (x_weight/y_weight) *100
+
+def calculate_grams_of_water(total_flour, hydration_percent, starter_percent, starter_hydration, butter_percent, milk_percent, cream_water_percent, cream_percent):
+    """
+    Calculate the grams of water needed based on ingredient percentages.
+
+    Args:
+        total_flour (float): Total flour weight in grams.
+        hydration_percent (float): Desired hydration percentage.
+        starter_percent (float): Percentage of starter in the recipe.
+        starter_hydration (float): Hydration percentage of the starter.
+        butter_percent (float): Percentage of butter in the recipe.
+        milk_percent (float): Percentage of milk in the recipe.
+        cream_water_percent (float): Percentage of water in cream.
+        cream_percent (float): Percentage of cream in the recipe.
+
+    Returns:
+        float: Grams of water needed.
+    """
+    starter_hydration_factor = 1 + 1 / starter_hydration
+    water_grams = total_flour * (
+        hydration_percent
+        - starter_percent / starter_hydration_factor
+        - 0.15 * butter_percent
+        - 0.87 * milk_percent
+        - cream_water_percent * cream_percent
+    )
+    return water_grams
+
+def calculate_grams_of_white_flour(total_flour, starter_percent, starter_hydration_percent, wholeness_percent):
+    """
+    Calculate the grams of white flour needed based on ingredient percentages.
+
+    Args:
+        total_flour (float): Total flour weight in grams.
+        starter_percent (float): Percentage of starter in the recipe.
+        starter_hydration_percent (float): Hydration percentage of the starter.
+        wholeness_percent (float): Percentage of whole grains (non-white flour).
+
+    Returns:
+        float: Grams of white flour needed.
+    """
+    starter_hydration_factor = 1 + 1 / starter_hydration_percent
+
+    white_flour_grams = total_flour * (
+        1 - starter_percent / starter_hydration_factor - wholeness_percent
+    )
+
+    return white_flour_grams
+
 
 
 main()
